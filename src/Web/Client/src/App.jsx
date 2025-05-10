@@ -24,15 +24,21 @@ function App() {
     <>
       <DefaultLayout />
 
-      <React.Suspense fallback={<Fallback />}>
-        <Routes>
-          {routes.map(({ path, page }) => (
-            <Route key={path} path={path} element={React.createElement(page)} />
-          ))}
-          <Route path="/" element={<HomePage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </React.Suspense>
+      <div className="w-screen h-[calc(100vh-(var(--spacing)*15))] bg-gray-100">
+        <React.Suspense fallback={<Fallback />}>
+          <Routes>
+            {routes.map(({ path, page }) => (
+              <Route
+                key={path}
+                path={path}
+                element={React.createElement(page)}
+              />
+            ))}
+            <Route path="/" element={<HomePage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </React.Suspense>
+      </div>
     </>
   );
 }

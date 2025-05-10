@@ -46,6 +46,7 @@ export default [
       "simple-import-sort/exports": "error",
       "react/jsx-uses-vars": "error",
       "unused-imports/no-unused-imports": "error",
+      "react/jsx-no-useless-fragment": ["error", { "allowExpressions": false }]
     },
   },
 ];
