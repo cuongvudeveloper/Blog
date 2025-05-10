@@ -12,6 +12,11 @@ public static class DependencyInjection
 {
     public static void AddWebServices(this IHostApplicationBuilder builder, ILogger logger)
     {
+        if (builder.Environment.IsDevelopment())
+        {
+            _ = builder.Services.AddCors();
+        }
+
         _ = builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         _ = builder.Services.AddScoped<IUser, CurrentUser>();

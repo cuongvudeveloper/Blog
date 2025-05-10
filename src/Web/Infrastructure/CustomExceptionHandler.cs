@@ -1,4 +1,5 @@
-﻿using Blog.Application.Common.Models;
+﻿using Blog.Application.Common.Exceptions;
+using Blog.Application.Common.Models;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace Blog.Web.Infrastructure;
@@ -24,11 +25,19 @@ public class CustomExceptionHandler : IExceptionHandler
 
     private async Task HandleException(HttpContext httpContext, Exception exception)
     {
+        var type = exception.GetType();
         httpContext.Response.StatusCode = StatusCodes.Status200OK;
 
-        await httpContext.Response.WriteAsJsonAsync(Result<object>.Failure(
-        [
-            exception.Message
-        ]));
+        if (type == typeof(ValidationException))
+        {
+            await httpContext.Response.WriteAsJsonAsync(Result<object>.Failure(((ValidationException)exception).FlattenedErrors));
+        }
+        else
+        {
+            await httpContext.Response.WriteAsJsonAsync(Result<object>.Failure(
+            [
+                exception.Message
+            ]));
+        }
     }
 }

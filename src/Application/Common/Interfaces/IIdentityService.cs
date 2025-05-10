@@ -1,4 +1,5 @@
 ﻿using Blog.Domain.Entities;
+using Blog.Domain.Enums;
 
 namespace Blog.Application.Common.Interfaces;
 
@@ -10,7 +11,7 @@ public interface IIdentityService
 
     Task<bool> AuthorizeAsync(Guid userId, string policyName);
 
-    Task<string> LoginAsync(string email, string password);
+    Task<(string, ResultStatus)> LoginAsync(string email, string password);
 
     Task<ApplicationUser?> InfoAsync(Guid userId);
 }

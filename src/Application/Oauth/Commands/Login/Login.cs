@@ -1,5 +1,6 @@
 ﻿using Blog.Application.Common.Interfaces;
 using Blog.Application.Common.Models;
+using Blog.Domain.Enums;
 
 namespace Blog.Application.Oauth.Commands.Login;
 public record LoginCommand : IRequest<Result<LoginResponse>>
@@ -25,11 +26,13 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginRes
 
     public async Task<Result<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        string accessToken = await _identityService.LoginAsync(request.Email, request.Password);
+        (string, ResultStatus) result = await _identityService.LoginAsync(request.Email, request.Password);
 
-        return Result<LoginResponse>.Success(new LoginResponse()
-        {
-            AccessToken = accessToken,
-        });
+        return result.Item2 != ResultStatus.Success
+            ? Result<LoginResponse>.Failure([], ResultStatus.NotFound)
+            : Result<LoginResponse>.Success(new LoginResponse()
+            {
+                AccessToken = result.Item1,
+            });
     }
 }

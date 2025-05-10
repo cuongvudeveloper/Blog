@@ -35,6 +35,9 @@ if (app.Environment.IsDevelopment())
 {
     await app.InitialiseDatabaseAsync();
     _ = app.Map("/", () => Results.Redirect("/api"));
+    _ = app.UseCors(options => options.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod());
 }
 else
 {

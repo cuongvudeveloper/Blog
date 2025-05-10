@@ -4,6 +4,7 @@ using System.Text;
 using Blog.Application.Common.Interfaces;
 using Blog.Application.Common.Models;
 using Blog.Domain.Entities;
+using Blog.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -60,11 +61,14 @@ public class IdentityService : IIdentityService
         return result.Succeeded;
     }
 
-    public async Task<string> LoginAsync(string email, string password)
+    public async Task<(string, ResultStatus)> LoginAsync(string email, string password)
     {
         JwtSecurityTokenHandler handler = new();
         ApplicationUser? user = await _userManager.FindByEmailAsync(email);
-        _ = Guard.Against.Null(user);
+        if (user == null)
+        {
+            return (string.Empty, ResultStatus.NotFound);
+        }
 
         IList<string> roles = await _userManager.GetRolesAsync(user);
         ClaimsIdentity claims = new();
@@ -85,7 +89,7 @@ public class IdentityService : IIdentityService
         };
 
         SecurityToken accessToken = handler.CreateToken(tokenDescriptor);
-        return handler.WriteToken(accessToken);
+        return (handler.WriteToken(accessToken), ResultStatus.Success);
     }
 
     public async Task<ApplicationUser?> InfoAsync(Guid userId)
