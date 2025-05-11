@@ -1,11 +1,9 @@
 import React from "react";
 
-import { Button } from "@/components/ui/button";
+import DefaultLayout from "@/components/layouts/DefaultLayout";
 
 function App(): React.JSX.Element {
-  return (
-    <Button>Hello</Button>
-  );
+  return <DefaultLayout />;
 }
 
 export default App;
