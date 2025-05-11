@@ -37,7 +37,7 @@ const routes = Object.keys(pages).map((path) => {
 function DefaultLayout(): React.JSX.Element {
   return (
     <>
-      <header className="flex justify-between p-3 shadow-sm">
+      <header className="flex justify-between p-3 shadow-md">
         <Link to="/">
           <img src={logo} alt="Hanover" className="h-9" />
         </Link>
@@ -56,10 +56,10 @@ function DefaultLayout(): React.JSX.Element {
         </NavigationMenu>
         <div>
           <Link to="/register">
-            <Button className="mr-2 cursor-pointer">Sign up</Button>
+            <Button className="mr-2">Sign up</Button>
           </Link>
           <Link to="/login">
-            <Button className="cursor-pointer">Login</Button>
+            <Button>Login</Button>
           </Link>
         </div>
       </header>

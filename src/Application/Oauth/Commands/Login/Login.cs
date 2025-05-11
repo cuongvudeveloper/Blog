@@ -29,7 +29,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginRes
         (string, ResultStatus) result = await _identityService.LoginAsync(request.Email, request.Password);
 
         return result.Item2 != ResultStatus.Success
-            ? Result<LoginResponse>.Failure([], ResultStatus.NotFound)
+            ? Result<LoginResponse>.Failure([], result.Item2)
             : Result<LoginResponse>.Success(new LoginResponse()
             {
                 AccessToken = result.Item1,

@@ -15,17 +15,20 @@ namespace Blog.Infrastructure.Identity;
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
     private readonly JwtSettings _jwtSettings;
 
     public IdentityService(
         UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
         IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
         IAuthorizationService authorizationService,
         IOptions<JwtSettings> jwtSettings)
     {
         _userManager = userManager;
+        _signInManager = signInManager;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         _authorizationService = authorizationService;
         _jwtSettings = jwtSettings.Value;
@@ -68,6 +71,22 @@ public class IdentityService : IIdentityService
         if (user == null)
         {
             return (string.Empty, ResultStatus.NotFound);
+        }
+        SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, password, true);
+
+        if (result.IsNotAllowed)
+        {
+            return (string.Empty, ResultStatus.IsNotAllowed);
+        }
+
+        if (result.IsLockedOut)
+        {
+            return (string.Empty, ResultStatus.IsLockedOut);
+        }
+
+        if (!result.Succeeded)
+        {
+            return (string.Empty, ResultStatus.Failure);
         }
 
         IList<string> roles = await _userManager.GetRolesAsync(user);

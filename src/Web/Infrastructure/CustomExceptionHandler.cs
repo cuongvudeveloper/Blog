@@ -25,7 +25,7 @@ public class CustomExceptionHandler : IExceptionHandler
 
     private async Task HandleException(HttpContext httpContext, Exception exception)
     {
-        var type = exception.GetType();
+        Type type = exception.GetType();
         httpContext.Response.StatusCode = StatusCodes.Status200OK;
 
         if (type == typeof(ValidationException))
