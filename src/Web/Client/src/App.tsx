@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 function App(): React.JSX.Element {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="dark" storageKey={import.meta.env.VITE_UI_THEME_KEY_NAME}>
       <DefaultLayout />
       <Toaster />
     </ThemeProvider>
