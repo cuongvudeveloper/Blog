@@ -1,5 +1,5 @@
-import axiosInstance from "../plugins/axiosInstance";
-import type { Result } from "./types";
+import type { Result } from "@/apis/types";
+import axiosInstance from "@/plugins/axiosInstance";
 
 export interface LoginRequest {
   email: string;

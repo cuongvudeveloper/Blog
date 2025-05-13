@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  IconBrandFacebookFilled,
-  IconBrandGoogleFilled,
-} from "@tabler/icons-react";
+import { IconCheck, IconExclamationCircle } from "@tabler/icons-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { login } from "@/apis/oauth";
+import FacebookLogo from "@/assets/img/facebook.webp";
+import GoogleLogo from "@/assets/img/google.webp";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -21,17 +21,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import dataConfigs from "@/configs/dataConfigs";
-import { ResultStatus } from "@/enums/ResultStatus";
+import { DataConfigs } from "@/configs/data-configs";
+import { ResultStatus } from "@/enums/result-status";
 
 function LoginPage(): React.JSX.Element {
   const formSchema = z.object({
-    email: z.string().nonempty().email().max(dataConfigs.DefaultString),
+    email: z.string().nonempty().email().max(DataConfigs.DefaultString),
     password: z
       .string()
       .nonempty()
-      .min(dataConfigs.PasswordMinLength)
-      .max(dataConfigs.DefaultString),
+      .min(DataConfigs.PasswordMinLength)
+      .max(DataConfigs.DefaultString),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,14 +49,38 @@ function LoginPage(): React.JSX.Element {
     });
     switch (response?.status) {
       case ResultStatus.Success:
+        localStorage.setItem(
+          import.meta.env.VITE_ACCESS_TOKEN_KEY_NAME,
+          response.data!.accessToken
+        );
+        toast.success("Success", {
+          description: "Log in successfully.",
+          icon: <IconCheck />,
+        });
         break;
       case ResultStatus.NotFound:
+        toast.error("Failure", {
+          description: "Your account does not exist.",
+          icon: <IconExclamationCircle />,
+        });
         break;
       case ResultStatus.IsNotAllowed:
+        toast.error("Failure", {
+          description: "Your account has not been verified.",
+          icon: <IconExclamationCircle />,
+        });
         break;
       case ResultStatus.IsLockedOut:
+        toast.error("Failure", {
+          description: "Your account has been locked. Please try again later.",
+          icon: <IconExclamationCircle />,
+        });
         break;
       case ResultStatus.Failure:
+        toast.error("Failure", {
+          description: "Password is incorrect.",
+          icon: <IconExclamationCircle />,
+        });
         break;
     }
   }
@@ -115,10 +139,10 @@ function LoginPage(): React.JSX.Element {
           </Label>
           <div className="flex justify-center gap-2 mt-3">
             <Link to="/" className="rounded-full p-1 cursor-pointer">
-              <IconBrandGoogleFilled color="red" />
+              <img src={FacebookLogo} alt="Facebook" className="w-6" />
             </Link>
             <Link to="/" className="rounded-full p-1 cursor-pointer">
-              <IconBrandFacebookFilled color="blue" />
+              <img src={GoogleLogo} alt="Google" className="w-6" />
             </Link>
           </div>
         </CardContent>

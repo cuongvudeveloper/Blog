@@ -1,4 +1,4 @@
-import { ResultStatus } from "@/enums/ResultStatus";
+import { ResultStatus } from "@/enums/result-status";
 
 export interface Result<T extends object> {
   succeeded: boolean;

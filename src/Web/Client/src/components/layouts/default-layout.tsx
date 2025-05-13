@@ -2,8 +2,9 @@ import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
 import logo from "@/assets/logo.png";
-import Fallback from "@/components/core/Fallback";
+import Fallback from "@/components/core/fallback";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -13,7 +14,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import menu from "@/configs/menu";
 import NotFoundPage from "@/pages/_404";
-import HomePage from "@/pages/Home";
+import HomePage from "@/pages/home";
 
 const pages = import.meta.glob("@/pages/**/index.tsx") as Record<
   string,
@@ -54,9 +55,10 @@ function DefaultLayout(): React.JSX.Element {
             ))}
           </NavigationMenuList>
         </NavigationMenu>
-        <div>
+        <div className="flex gap-2 items-center">
+          <ModeToggle />
           <Link to="/register">
-            <Button className="mr-2">Sign up</Button>
+            <Button>Sign up</Button>
           </Link>
           <Link to="/login">
             <Button>Login</Button>
