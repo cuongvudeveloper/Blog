@@ -1,8 +1,8 @@
 import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
-import logo from "@/assets/logo.png";
 import Fallback from "@/components/core/fallback";
+import Logo from "@/components/core/logo";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import {
@@ -40,7 +40,7 @@ function DefaultLayout(): React.JSX.Element {
     <>
       <header className="flex justify-between p-3 shadow-md">
         <Link to="/">
-          <img src={logo} alt="Hanover" className="h-9" />
+          <Logo />
         </Link>
         <NavigationMenu>
           <NavigationMenuList>
