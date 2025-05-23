@@ -1,23 +1,30 @@
 import type { Result } from "@/apis/types";
 import axiosInstance from "@/plugins/axiosInstance";
 
-export interface LoginRequest {
+export type LoginRequest = {
   email: string;
   password: string;
-}
+};
 
-export interface LoginResponse {
+export type LoginResponse = {
   accessToken: string;
-}
+};
+
+export type InfoResponse = {
+  userName: string;
+  email: string;
+  roles: string[];
+};
 
 export async function login(data: LoginRequest) {
-  try {
-    const response = await axiosInstance.post<Result<LoginResponse>>(
-      "oauth/login",
-      data
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await axiosInstance.post<Result<LoginResponse>>(
+    "oauth/login",
+    data
+  );
+  return response.data;
+}
+
+export async function info() {
+  const response = await axiosInstance.get<Result<InfoResponse>>("oauth/info");
+  return response.data;
 }

@@ -1,9 +1,18 @@
 import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
-import Fallback from "@/components/core/fallback";
-import Logo from "@/components/core/logo";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Fallback from "@/components/ui/fallback";
+import Logo from "@/components/ui/logo";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import {
   NavigationMenu,
@@ -15,6 +24,8 @@ import {
 import menu from "@/configs/menu";
 import NotFoundPage from "@/pages/_404";
 import HomePage from "@/pages/home";
+
+import { useAuth } from "../hooks/auth-context";
 
 const pages = import.meta.glob("@/pages/**/index.tsx") as Record<
   string,
@@ -36,6 +47,19 @@ const routes = Object.keys(pages).map((path) => {
 });
 
 function DefaultLayout(): React.JSX.Element {
+  const authContext = useAuth();
+
+  function logout() {
+    authContext.setIsAuthenticated(false);
+  }
+
+  function avatarFallback(userName?: string) {
+    if (!userName) return "";
+
+    const matches = userName.match(/[A-Z]/g) || [];
+    return (matches[0] || "") + (matches[1] || "");
+  }
+
   return (
     <>
       <header className="flex justify-between p-3 shadow-md">
@@ -57,12 +81,36 @@ function DefaultLayout(): React.JSX.Element {
         </NavigationMenu>
         <div className="flex gap-2 items-center">
           <ModeToggle />
-          <Link to="/register">
-            <Button>Sign up</Button>
-          </Link>
-          <Link to="/login">
-            <Button>Login</Button>
-          </Link>
+          {authContext.isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Avatar className="cursor-pointer">
+                  <AvatarImage src="" />
+                  <AvatarFallback>
+                    {avatarFallback(authContext.user?.userName)}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="bottom" align="end">
+                <DropdownMenuLabel>
+                  Hi {authContext.user?.userName}!
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <Link to="/profile">
+                  <DropdownMenuItem className="cursor-pointer">
+                    Profile
+                  </DropdownMenuItem>
+                </Link>
+                <DropdownMenuItem onClick={logout} className="cursor-pointer">
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link to="/login">
+              <Button>Login</Button>
+            </Link>
+          )}
         </div>
       </header>
       <div className="w-screen h-[calc(100vh-(var(--spacing)*15))]">

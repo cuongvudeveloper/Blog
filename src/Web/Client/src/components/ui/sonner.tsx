@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 
-import { useTheme } from "@/components/core/theme-provider";
+import { useTheme } from "@/components/hooks/theme-provider";
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();

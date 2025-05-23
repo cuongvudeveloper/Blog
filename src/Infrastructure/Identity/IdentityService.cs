@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Blog.Application.Common.Interfaces;
 using Blog.Application.Common.Models;
+using Blog.Application.Oauth.Commands.Info;
 using Blog.Domain.Entities;
 using Blog.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -111,8 +112,16 @@ public class IdentityService : IIdentityService
         return (handler.WriteToken(accessToken), ResultStatus.Success);
     }
 
-    public async Task<ApplicationUser?> InfoAsync(Guid userId)
+    public async Task<InfoResponse> InfoAsync(Guid userId)
     {
-        return await _userManager.FindByIdAsync(userId.ToString());
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        _ = Guard.Against.Null(user);
+        var roles = await _userManager.GetRolesAsync(user);
+        return new InfoResponse()
+        {
+            UserName = user.UserName!,
+            Email = user.Email!,
+            Role = roles.ToArray()
+        };
     }
 }

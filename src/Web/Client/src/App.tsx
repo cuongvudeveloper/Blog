@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ThemeProvider } from "@/components/core/theme-provider";
+import { ThemeProvider } from "@/components/hooks/theme-provider";
 import DefaultLayout from "@/components/layouts/default-layout";
 import { Toaster } from "@/components/ui/sonner";
 

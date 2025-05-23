@@ -2,13 +2,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { IconCheck, IconExclamationCircle } from "@tabler/icons-react";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { login } from "@/apis/oauth";
 import FacebookLogo from "@/assets/img/facebook.webp";
 import GoogleLogo from "@/assets/img/google.webp";
+import { useAuth } from "@/components/hooks/auth-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -21,10 +22,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DataConfigs } from "@/configs/data-configs";
+import { DataConfigs } from "@/constants/data-configs";
 import { ResultStatus } from "@/enums/result-status";
 
 function LoginPage(): React.JSX.Element {
+  const navigate = useNavigate();
+  const authContext = useAuth();
   const formSchema = z.object({
     email: z.string().nonempty().email().max(DataConfigs.DefaultString),
     password: z
@@ -53,10 +56,12 @@ function LoginPage(): React.JSX.Element {
           import.meta.env.VITE_ACCESS_TOKEN_KEY_NAME,
           response.data!.accessToken
         );
+        authContext.setIsAuthenticated(true);
         toast.success("Success", {
           description: "Log in successfully.",
           icon: <IconCheck />,
         });
+        navigate("/");
         break;
       case ResultStatus.NotFound:
         toast.error("Failure", {

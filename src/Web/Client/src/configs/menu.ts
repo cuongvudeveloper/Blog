@@ -1,7 +1,7 @@
-interface MenuItem {
+type MenuItem = {
   lable: string;
   to: string;
-}
+};
 
 const menu: MenuItem[] = [
   {

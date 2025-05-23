@@ -10,7 +10,11 @@ public record InfoCommand : IRequest<Result<InfoResponse>>
 
 public record InfoResponse
 {
-    public ApplicationUser? User { get; init; } = null!;
+    public string UserName { get; init; } = null!;
+
+    public string Email { get; init; } = null!;
+
+    public string[] Role { get; init; } = null!;
 }
 
 public class InfoCommandHandler : IRequestHandler<InfoCommand, Result<InfoResponse>>
@@ -28,11 +32,8 @@ public class InfoCommandHandler : IRequestHandler<InfoCommand, Result<InfoRespon
     {
         _ = Guard.Against.Null(_user.Id);
 
-        ApplicationUser? user = await _identityService.InfoAsync(_user.Id ?? Guid.Empty);
+        InfoResponse result = await _identityService.InfoAsync(_user.Id ?? Guid.Empty);
 
-        return Result<InfoResponse>.Success(new InfoResponse()
-        {
-            User = user,
-        });
+        return Result<InfoResponse>.Success(result);
     }
 }
